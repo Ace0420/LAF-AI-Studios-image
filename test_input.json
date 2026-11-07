@@ -1,0 +1,11 @@
+{
+  "input": {
+    "prompt": "A woman standing protectively behind her partner, who sits in a wheelchair, on a stormy cliff at dusk, dragons forming in the storm clouds above them, cinematic lighting, dark and atmospheric",
+    "title": "Like I Said Again",
+    "width": 1024,
+    "height": 1024,
+    "infer_step": 9,
+    "guidance_scale": 0.0,
+    "format": "jpg"
+  }
+}

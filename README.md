@@ -7,13 +7,13 @@ image per request, uploads it to Cloudflare R2, and returns a link.
 Sister repo to `LAF_AI_Studios` (the music worker). Same pattern, same R2
 bucket, separate endpoint, so neither Dockerfile gets in the other's way.
 
-> Status: spec. `handler.py` and `Dockerfile` are being written next.
-> Update this section once the first build passes.
+> Status: code written, not yet built or tested on RunPod. Update this
+> section once the first build passes.
 
 ## What it does
 
 - Model: Z-Image-Turbo (Apache 2.0), via `diffusers`.
-- Turbo-distilled, so `guidance_scale` must stay at `0.0`. This is correct,
+- Turbo-distilled (9 steps = 8 model passes), so `guidance_scale` must stay at `0.0`. This is correct,
   not a bug. Do not "tune" it up the way ACE-Step's guidance was tuned.
 - One image per request by default. Returns an R2 link, not a base64 blob.
 
@@ -26,7 +26,7 @@ bucket, separate endpoint, so neither Dockerfile gets in the other's way.
     "title": "Like I Said Again",
     "width": 1024,
     "height": 1024,
-    "infer_step": 8,
+    "infer_step": 9,
     "guidance_scale": 0.0,
     "seed": 42,
     "format": "jpg"
@@ -66,7 +66,7 @@ misconfigured.
 | `R2_ACCESS_KEY_ID` | R2 S3 access key ID |
 | `R2_SECRET_ACCESS_KEY` | R2 S3 secret (exact name; `R2_SECRET_ACCESS` will not work) |
 | `R2_PUBLIC_BASE` | public base URL for the bucket |
-| `MODEL_ID` | Hugging Face id for Z-Image-Turbo |
+| `MODEL_ID` | optional, defaults to `Tongyi-MAI/Z-Image-Turbo` |
 | `HF_HOME` | `/runpod-volume/hf` when a network volume is attached |
 
 Never commit these values to the repo.
@@ -99,8 +99,8 @@ doc. Do not use a padded estimate.
 
 ## Files
 
-- `Dockerfile` - build image (to be added)
-- `handler.py` - RunPod handler (to be added)
-- `test_input.json` - sample request (to be added)
+- `Dockerfile` - build image
+- `handler.py` - RunPod handler
+- `test_input.json` - sample request
 - `README.md` - this file
 
