@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir torch \
+# Pin torch to CUDA 12.8 wheels so it runs on RunPod hosts with 12.x drivers
+# (an unpinned install pulls the newest CUDA build, which can fail to start).
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cu128 \
     && pip install --no-cache-dir diffusers transformers accelerate safetensors \
        sentencepiece pillow runpod boto3 huggingface_hub hf_transfer
 

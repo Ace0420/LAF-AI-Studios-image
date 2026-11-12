@@ -44,11 +44,21 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 # ---------------------------------------------------------------- load once per worker
 t0 = time.time()
-import torch                          # noqa: E402
-from diffusers import ZImagePipeline  # noqa: E402
-
-PIPE = ZImagePipeline.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16)
-PIPE.to("cuda")
+print("[LAF-IMG] starting", flush=True)
+try:
+    import torch                          # noqa: E402
+    from diffusers import ZImagePipeline  # noqa: E402
+    import diffusers                      # noqa: E402
+    print(f"[LAF-IMG] torch {torch.__version__} cuda_build={torch.version.cuda} "
+          f"cuda_available={torch.cuda.is_available()} diffusers {diffusers.__version__}", flush=True)
+    PIPE = ZImagePipeline.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16)
+    PIPE.to("cuda")
+except Exception:
+    import traceback
+    traceback.print_exc()
+    print("[LAF-IMG] startup failed (see traceback above)", flush=True)
+    time.sleep(5)
+    raise
 print(f"[LAF-IMG] model ready in {time.time() - t0:.1f}s ({MODEL_ID})", flush=True)
 
 
