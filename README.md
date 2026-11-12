@@ -105,4 +105,3 @@ doc. Do not use a padded estimate.
 - `handler.py` - RunPod handler
 - `test_input.json` - sample request
 - `README.md` - this file
-
