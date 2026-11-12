@@ -7,8 +7,9 @@ image per request, uploads it to Cloudflare R2, and returns a link.
 Sister repo to `LAF_AI_Studios` (the music worker). Same pattern, same R2
 bucket, separate endpoint, so neither Dockerfile gets in the other's way.
 
-> Status: code written, not yet built or tested on RunPod. Update this
-> section once the first build passes.
+> Status: first build (Nov 7) crash-looped on RunPod hosts with older CUDA drivers
+> because torch was unpinned and installed the CUDA 13 build. Nov 12: torch pinned
+> to CUDA 12.8 wheels and startup logging added. Retest pending.
 
 ## What it does
 
