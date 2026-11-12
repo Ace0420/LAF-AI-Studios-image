@@ -36,8 +36,24 @@ R2_SECRET = os.environ.get("R2_SECRET_ACCESS_KEY")
 R2_PUBLIC_BASE = os.environ.get("R2_PUBLIC_BASE")
 
 # Use the network volume for model downloads when one is attached.
-if os.path.isdir("/runpod-volume") and "HF_HOME" not in os.environ:
-    os.environ["HF_HOME"] = "/runpod-volume/hf"
+if os.path.isdir("/runpod-volume"):
+    _base = "/runpod-volume/hf"
+    os.makedirs(_base + "/tmp", exist_ok=True)
+    os.environ.setdefault("HF_HOME", _base)
+    os.environ.setdefault("HF_HUB_CACHE", _base + "/hub")
+    os.environ.setdefault("HF_XET_CACHE", _base + "/xet")
+    os.environ.setdefault("TMPDIR", _base + "/tmp")
+    # the xet downloader hit "Disk quota exceeded" on the small container disk
+    os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+    import tempfile
+    tempfile.tempdir = os.environ["TMPDIR"]
+    try:
+        import shutil
+        for _p in ("/", "/runpod-volume"):
+            _u = shutil.disk_usage(_p)
+            print("[LAF-IMG] disk %s free=%.1fGB total=%.1fGB" % (_p, _u.free / 1e9, _u.total / 1e9), flush=True)
+    except Exception as _e:
+        print("[LAF-IMG] disk check failed", _e, flush=True)
 
 OUT_DIR = "/tmp/laf_img"
 os.makedirs(OUT_DIR, exist_ok=True)
